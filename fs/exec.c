@@ -82,6 +82,10 @@
 #include "mount.h"
 #endif
 
+#ifdef CONFIG_KSU
+#include <linux/ksu.h>
+#endif
+
 int suid_dumpable = 0;
 
 static LIST_HEAD(formats);
@@ -1810,6 +1814,10 @@ static int exec_binprm(struct linux_binprm *bprm)
 	return ret;
 }
 
+#ifdef CONFIG_KSU
+extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *argv, void *envp, int *flags);
+#endif
+
 /*
  * sys_execve() executes a new program.
  */
@@ -1823,6 +1831,11 @@ static int do_execveat_common(int fd, struct filename *filename,
 	struct file *file;
 	struct files_struct *displaced;
 	int retval;
+
+	#ifdef CONFIG_KSU
+	if (get_ksu_state() > 0)
+		ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
+	#endif
 
 	if (IS_ERR(filename))
 		return PTR_ERR(filename);
