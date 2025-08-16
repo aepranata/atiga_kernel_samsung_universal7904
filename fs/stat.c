@@ -18,10 +18,6 @@
 #include <asm/uaccess.h>
 #include <asm/unistd.h>
 
-#ifdef CONFIG_KSU
-#include <linux/ksu.h>
-#endif
-
 void generic_fillattr(struct inode *inode, struct kstat *stat)
 {
 	stat->dev = inode->i_sb->s_dev;
@@ -103,8 +99,7 @@ int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
 	unsigned int lookup_flags = 0;
 
 #ifdef COFIG_KSU
-	if (get_ksu_state() > 0)
-		ksu_handle_stat(&dfd, &filename, &flag);
+	ksu_handle_stat(&dfd, &filename, &flag);
 #endif
 
 	if ((flag & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT |
