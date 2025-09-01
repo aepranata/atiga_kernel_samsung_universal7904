@@ -398,8 +398,8 @@ struct sock *xt_socket_lookup_slow_v6(struct net *net,
 	if (sk)
 		atomic_inc(&sk->sk_refcnt);
 	else
-		sk = xt_socket_get_sock_v6(dev_net(skb->dev), data_skb, doff,
-					   tproto, saddr, daddr, sport, dport,
+		sk = xt_socket_get_sock_v6(dev_net(skb->dev), tproto,
+					   saddr, daddr, sport, dport,
 					   indev);
 
 	return sk;

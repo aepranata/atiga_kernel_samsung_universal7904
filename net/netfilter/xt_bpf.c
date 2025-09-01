@@ -109,6 +109,13 @@ static void bpf_mt_destroy(const struct xt_mtdtor_param *par)
 	bpf_prog_destroy(info->filter);
 }
 
+static void bpf_mt_destroy(const struct xt_mtdtor_param *par)
+{
+	const struct xt_bpf_info *info = par->matchinfo;
+
+	bpf_prog_destroy(info->filter);
+}
+
 static void bpf_mt_destroy_v1(const struct xt_mtdtor_param *par)
 {
 	const struct xt_bpf_info_v1 *info = par->matchinfo;
